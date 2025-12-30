@@ -6,7 +6,19 @@ type LogoProps = {
 };
 
 const Logo = ({ width = 128, height = 128 }: LogoProps) => {
-  return <Image src="/logo.png" alt="Logo " width={width} height={height} />;
+  return (
+    <div className="flex flex-row gap-2 justify-center items-center">
+      <Image
+        src="/logo.png"
+        alt="Logo ProtectMyDesign"
+        width={width}
+        height={height}
+      />
+      <p className="text-slate-12 dark:text-white w-24 leading-4 font-semibold text-xl">
+        ProtectMy Design
+      </p>
+    </div>
+  );
 };
 
 export default Logo;
