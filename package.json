@@ -11,6 +11,9 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.36.1",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.89.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dotenv": "^17.2.3",
@@ -21,6 +24,7 @@
     "postgres": "^3.4.7",
     "react": "19.2.1",
     "react-dom": "19.2.1",
+    "react-dropzone": "^14.3.8",
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
