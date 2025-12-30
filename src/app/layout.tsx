@@ -15,7 +15,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Protect My Design",
-  description: "Protect My Design is an open-sourced tools to help you protect your design. Securely share your design to client. Free forever!",
+  description:
+    "Protect My Design is an open-sourced tools to help you protect your design. Securely share your design to client. Free forever!",
 };
 
 export default function RootLayout({
@@ -28,8 +29,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-brand-1 dark:bg-dark-brand-1`}
       >
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem
-            disableTransitionOnChange>{children}</ThemeProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
