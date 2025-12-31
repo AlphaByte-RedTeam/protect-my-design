@@ -6,14 +6,17 @@ import {
   type PropsWithChildren,
   useCallback,
   useContext,
+  useEffect,
 } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { CopyIcon } from "@/components/ui/copy";
 import type { UseSupabaseUploadReturn } from "@/hooks/use-supabase-upload";
+import { getOsType } from "@/lib/getOsType";
 import { cn } from "@/lib/utils";
 import { DownloadIcon } from "./ui/download";
 import { Input } from "./ui/input";
+import { Kbd, KbdGroup } from "./ui/kbd";
 
 export const formatBytes = (
   bytes: number,
@@ -59,6 +62,19 @@ const Dropzone = ({
     (restProps.isDragActive && restProps.isDragReject) ||
     (restProps.errors.length > 0 && !restProps.isSuccess) ||
     restProps.files.some((file) => file.errors.length !== 0);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Check for Ctrl+O or Cmd+O
+      if ((e.ctrlKey || e.metaKey) && e.key === "o") {
+        e.preventDefault();
+        restProps.open();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [restProps.open]);
 
   return (
     <DropzoneContext.Provider value={{ ...restProps }}>
@@ -292,6 +308,7 @@ const DropzoneContent = ({ className }: { className?: string }) => {
 
 const DropzoneEmptyState = ({ className }: { className?: string }) => {
   const { maxFiles, maxFileSize, inputRef, isSuccess } = useDropzoneContext();
+  const os = getOsType();
 
   if (isSuccess) {
     return null;
@@ -303,6 +320,16 @@ const DropzoneEmptyState = ({ className }: { className?: string }) => {
       <p className="text-sm">
         Upload{!!maxFiles && maxFiles > 1 ? ` ${maxFiles}` : ""} file
         {!maxFiles || maxFiles > 1 ? "s" : ""}
+      </p>
+      <p className="text-sm hidden sm:block">
+        Press{" "}
+        <KbdGroup>
+          <Kbd>
+            {os === "mac" ? "⌘" : "Ctrl"}
+            <span>+</span>O
+          </Kbd>
+        </KbdGroup>{" "}
+        to open file dialog
       </p>
       <div className="flex flex-col items-center gap-y-1">
         <p className="text-xs text-muted-foreground">
