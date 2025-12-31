@@ -7,6 +7,7 @@ import {
   useCallback,
   useContext,
 } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { CopyIcon } from "@/components/ui/copy";
 import type { UseSupabaseUploadReturn } from "@/hooks/use-supabase-upload";
@@ -125,6 +126,15 @@ const DropzoneContent = ({ className }: { className?: string }) => {
     }
   };
 
+  const handleCopy = async (url: string) => {
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success("Link copied to clipboard");
+    } catch (error) {
+      console.error("Copy failed:", error);
+    }
+  };
+
   if (isSuccess) {
     return (
       <div
@@ -156,6 +166,13 @@ const DropzoneContent = ({ className }: { className?: string }) => {
                     readOnly
                     value={url}
                   />
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    onClick={() => handleCopy(url)}
+                  >
+                    <CopyIcon />
+                  </Button>
                   <Button
                     size="sm"
                     onClick={() => handleDownload(url, file.name)}
