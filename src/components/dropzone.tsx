@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle, File, Loader2, Upload, X } from "lucide-react";
+import { CheckCircle, File, Loader2, RotateCcw, Upload, X } from "lucide-react";
 import {
   createContext,
   type PropsWithChildren,
@@ -82,7 +82,9 @@ const DropzoneContent = ({ className }: { className?: string }) => {
     onUpload,
     loading,
     successes,
+    setSuccesses,
     errors,
+    setErrors,
     maxFileSize,
     maxFiles,
     isSuccess,
@@ -97,18 +99,30 @@ const DropzoneContent = ({ className }: { className?: string }) => {
     [files, setFiles],
   );
 
+  const handleReset = () => {
+    setFiles([]);
+    setSuccesses([]);
+    setErrors([]);
+  };
+
   if (isSuccess) {
     return (
       <div
         className={cn(
-          "flex flex-row items-center gap-x-2 justify-center",
+          "flex flex-col items-center gap-y-2 justify-center",
           className,
         )}
       >
-        <CheckCircle size={16} className="text-primary" />
-        <p className="text-primary text-sm">
-          Successfully uploaded {files.length} file{files.length > 1 ? "s" : ""}
-        </p>
+        <div className="flex flex-row items-center gap-x-2">
+          <CheckCircle size={16} className="text-primary" />
+          <p className="text-primary text-sm">
+            Successfully uploaded {files.length} file
+            {files.length > 1 ? "s" : ""}
+          </p>
+        </div>
+        <Button onClick={handleReset} size="sm" variant="outline">
+          <RotateCcw /> Upload another file
+        </Button>
       </div>
     );
   }
@@ -230,12 +244,13 @@ const DropzoneEmptyState = ({ className }: { className?: string }) => {
       <div className="flex flex-col items-center gap-y-1">
         <p className="text-xs text-muted-foreground">
           Drag and drop or{" "}
-          <a
+          <Button
+            variant="link"
             onClick={() => inputRef.current?.click()}
-            className="underline cursor-pointer transition hover:text-foreground"
+            className="underline p-0 text-xs cursor-pointer transition hover:text-foreground"
           >
             select {maxFiles === 1 ? `file` : "files"}
-          </a>{" "}
+          </Button>{" "}
           to upload
         </p>
         {maxFileSize !== Number.POSITIVE_INFINITY && (
