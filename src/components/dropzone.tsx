@@ -88,6 +88,7 @@ const DropzoneContent = ({ className }: { className?: string }) => {
     maxFileSize,
     maxFiles,
     isSuccess,
+    getPublicUrl,
   } = useDropzoneContext();
 
   const exceedMaxFiles = files.length > maxFiles;
@@ -109,7 +110,7 @@ const DropzoneContent = ({ className }: { className?: string }) => {
     return (
       <div
         className={cn(
-          "flex flex-col items-center gap-y-2 justify-center",
+          "flex flex-col items-center gap-y-4 justify-center w-full",
           className,
         )}
       >
@@ -120,8 +121,36 @@ const DropzoneContent = ({ className }: { className?: string }) => {
             {files.length > 1 ? "s" : ""}
           </p>
         </div>
-        <Button onClick={handleReset} size="sm" variant="outline">
-          <RotateCcw /> Upload another file
+
+        <div className="flex flex-col gap-4 w-full">
+          {files.map((file) => {
+            const url = getPublicUrl(file.name);
+            return (
+              <div
+                key={file.name}
+                className="flex flex-col gap-2 border p-4 rounded-md"
+              >
+                <p className="font-medium text-sm truncate">{file.name}</p>
+                <div className="flex gap-2 items-center">
+                  <input
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    readOnly
+                    value={url}
+                  />
+                  <Button asChild size="sm">
+                    <a href={url} target="_blank" rel="noopener noreferrer">
+                      Download
+                    </a>
+                  </Button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <Button onClick={handleReset} size="sm" variant="ghost">
+          <RotateCcw />
+          Upload another file
         </Button>
       </div>
     );

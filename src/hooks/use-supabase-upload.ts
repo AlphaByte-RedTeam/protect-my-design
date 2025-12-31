@@ -7,6 +7,7 @@ import {
   useDropzone,
 } from "react-dropzone";
 import { createClient } from "@/lib/client";
+import { addWatermark } from "@/lib/watermark";
 
 const supabase = createClient();
 
@@ -135,12 +136,37 @@ const useSupabaseUpload = (options: UseSupabaseUploadOptions) => {
 
     const responses = await Promise.all(
       filesToUpload.map(async (file) => {
-        const { error } = await supabase.storage
-          .from(bucketName)
+        // 1. Upload Original to 'original-assets'
+        const { error: originalError } = await supabase.storage
+          .from("original-assets")
           .upload(path ? `${path}/${file.name}` : file.name, file, {
             cacheControl: cacheControl.toString(),
             upsert,
           });
+
+        if (originalError) {
+          return {
+            name: file.name,
+            message: `Original upload failed: ${originalError.message}`,
+          };
+        }
+
+        // 2. Watermark
+        let fileToUpload: File = file;
+        try {
+          fileToUpload = await addWatermark(file);
+        } catch (e) {
+          console.error("Watermark failed, uploading original as preview", e);
+        }
+
+        // 3. Upload Watermarked to 'preview-assets' (bucketName)
+        const { error } = await supabase.storage
+          .from(bucketName)
+          .upload(path ? `${path}/${file.name}` : file.name, fileToUpload, {
+            cacheControl: cacheControl.toString(),
+            upsert,
+          });
+
         if (error) {
           return { name: file.name, message: error.message };
         } else {
@@ -183,6 +209,16 @@ const useSupabaseUpload = (options: UseSupabaseUploadOptions) => {
     }
   }, [files.length, setFiles, maxFiles]);
 
+  const getPublicUrl = useCallback(
+    (fileName: string) => {
+      const { data } = supabase.storage
+        .from(bucketName)
+        .getPublicUrl(path ? `${path}/${fileName}` : fileName);
+      return data.publicUrl;
+    },
+    [bucketName, path],
+  );
+
   return {
     files,
     setFiles,
@@ -193,6 +229,7 @@ const useSupabaseUpload = (options: UseSupabaseUploadOptions) => {
     errors,
     setErrors,
     onUpload,
+    getPublicUrl,
     maxFileSize: maxFileSize,
     maxFiles: maxFiles,
     allowedMimeTypes,
