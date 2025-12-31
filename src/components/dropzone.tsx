@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import type { UseSupabaseUploadReturn } from "@/hooks/use-supabase-upload";
 import { cn } from "@/lib/utils";
+import { DownloadIcon } from "./ui/download";
 
 export const formatBytes = (
   bytes: number,
@@ -106,6 +107,23 @@ const DropzoneContent = ({ className }: { className?: string }) => {
     setErrors([]);
   };
 
+  const handleDownload = async (url: string, fileName: string) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = fileName; // This forces download with the correct name
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error("Download failed:", error);
+    }
+  };
+
   if (isSuccess) {
     return (
       <div
@@ -137,10 +155,11 @@ const DropzoneContent = ({ className }: { className?: string }) => {
                     readOnly
                     value={url}
                   />
-                  <Button asChild size="sm">
-                    <a href={url} target="_blank" rel="noopener noreferrer">
-                      Download
-                    </a>
+                  <Button
+                    size="sm"
+                    onClick={() => handleDownload(url, file.name)}
+                  >
+                    <DownloadIcon /> Download
                   </Button>
                 </div>
               </div>
