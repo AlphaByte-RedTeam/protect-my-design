@@ -13,6 +13,7 @@ import { CopyIcon } from "@/components/ui/copy";
 import type { UseSupabaseUploadReturn } from "@/hooks/use-supabase-upload";
 import { cn } from "@/lib/utils";
 import { DownloadIcon } from "./ui/download";
+import { Input } from "./ui/input";
 
 export const formatBytes = (
   bytes: number,
@@ -72,7 +73,7 @@ const Dropzone = ({
           ),
         })}
       >
-        <input {...getInputProps()} />
+        <Input {...getInputProps()} />
         {children}
       </div>
     </DropzoneContext.Provider>
@@ -161,11 +162,7 @@ const DropzoneContent = ({ className }: { className?: string }) => {
               >
                 <p className="font-medium text-sm truncate">{file.name}</p>
                 <div className="flex gap-2 items-center text-muted-foreground">
-                  <input
-                    className="flex h-9 select-all w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                    readOnly
-                    value={url}
-                  />
+                  <Input readOnly value={url} />
                   <Button
                     size="icon"
                     variant="outline"
