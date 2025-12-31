@@ -7,7 +7,7 @@ type LogoProps = {
 
 const Logo = ({ width = 128, height = 128 }: LogoProps) => {
   return (
-    <div className="flex flex-row gap-2 justify-center items-center">
+    <div className="flex flex-row justify-center items-center">
       <Image
         src="/logo.png"
         alt="Logo ProtectMyDesign"
