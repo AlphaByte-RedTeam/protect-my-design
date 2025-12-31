@@ -8,6 +8,7 @@ import {
   useContext,
 } from "react";
 import { Button } from "@/components/ui/button";
+import { CopyIcon } from "@/components/ui/copy";
 import type { UseSupabaseUploadReturn } from "@/hooks/use-supabase-upload";
 import { cn } from "@/lib/utils";
 import { DownloadIcon } from "./ui/download";
@@ -149,9 +150,9 @@ const DropzoneContent = ({ className }: { className?: string }) => {
                 className="flex flex-col gap-2 border p-4 rounded-md"
               >
                 <p className="font-medium text-sm truncate">{file.name}</p>
-                <div className="flex gap-2 items-center">
+                <div className="flex gap-2 items-center text-muted-foreground">
                   <input
-                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex h-9 select-all w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                     readOnly
                     value={url}
                   />
