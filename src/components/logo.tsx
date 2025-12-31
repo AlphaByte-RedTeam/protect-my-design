@@ -14,7 +14,7 @@ const Logo = ({ width = 128, height = 128 }: LogoProps) => {
         width={width}
         height={height}
       />
-      <p className="text-slate-12 dark:text-white w-24 leading-4 font-semibold text-xl">
+      <p className="text-slate-12 dark:text-white w-24 leading-5 font-semibold text-xl">
         ProtectMy Design
       </p>
     </div>
